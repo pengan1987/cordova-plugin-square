@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -18,36 +17,47 @@
   specific language governing permissions and limitations
   under the License.
 -->
-
-<plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
-           id="cordova-plugin-square"
-      version="0.1.0">
+<plugin 
+    xmlns="http://cordova.apache.org/ns/plugins/1.0" id="cordova-plugin-square" version="0.1.0">
     <name>Square</name>
-
     <js-module src="www/square.js" name="square">
         <clobbers target="cordova.square" />
     </js-module>
-
+    <preference name="URL_SCHEME" />
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="Square" >
+            <feature name="Square">
                 <param name="android-package" value="com.squareup.plugin.square.Square"/>
             </feature>
         </config-file>
-
         <source-file src="src/android/Square.java" target-dir="src/com/squareup/plugin/square" />
         <framework src="com.squareup.sdk:register-sdk:1.0" />
     </platform>
-
     <!-- ios -->
-    <!-- <platform name="ios"> -->
-    <!--     <config-file target="config.xml" parent="/*"> -->
-    <!--         <feature name="Echo"> -->
-    <!--             <param name="ios-package" value="CDVEcho"/> -->
-    <!--         </feature> -->
-    <!--     </config-file> -->
-    <!--     <source-file src="src/ios/CDVEcho.m" /> -->
-    <!-- </platform> -->
-
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Square">
+                <param name="ios-package" value="Square"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/Square.h" />
+        <source-file src="src/ios/Square.m" />
+        <framework src="SquarePointOfSaleSDK" type="podspec" spec="~> 3.3.1" />
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+            <array>
+                <dict>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>$URL_SCHEME</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+        <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+            <array>
+                <string>square-commerce-v1</string>
+            </array>
+        </config-file>
+    </platform>
 </plugin>
