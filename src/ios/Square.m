@@ -26,9 +26,31 @@ NSString* callbackId_;
 static NSString* const DEFAULT_CURRENCY = @"USD";
 const int DEFAULT_TIMEOUT = 3500;
 
+- (NSString*)findSchemaStartsWithSq
+{
+    NSString* customizedSchema = @"";
+    id urlTypesObject = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+    if ([urlTypesObject isKindOfClass:[NSArray class]]) {
+        NSArray* urlTypesArray = urlTypesObject;
+        for (id urlType in urlTypesArray) {
+            id urlSchemeObject = [urlType objectForKey:@"CFBundleURLSchemes"];
+            if ([urlSchemeObject isKindOfClass:[NSArray class]]) {
+                NSArray* urlSchemeArray = urlSchemeObject;
+                NSString* pendingSchema = [urlSchemeArray objectAtIndex:0];
+                NSLog(@"pending schema: %@", pendingSchema);
+                if ([pendingSchema hasPrefix:@"sq-"]) {
+                    customizedSchema = pendingSchema;
+                }
+            }
+        }
+    }
+    return customizedSchema;
+}
+
 - (void)setOptions:(CDVInvokedUrlCommand*)command
 {
-    NSString* customizedSchema = [[[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"] objectAtIndex:0] objectForKey:@"CFBundleURLSchemes"] objectAtIndex:0];
+    NSString* customizedSchema = [self findSchemaStartsWithSq];
+
     callbackUrlString_ = [customizedSchema stringByAppendingString:@"://squarepay"];
     NSArray* options = [command.arguments objectAtIndex:0];
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
